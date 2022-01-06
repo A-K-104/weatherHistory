@@ -1,0 +1,53 @@
+{% extends 'navigationBar.html'%}
+{% block content %}
+
+<body>
+
+    <h1>admin page</h1>
+    <form action="\admin", method="post">
+        <table>
+            <tr>
+                <th>
+
+                </th>
+                <th>
+                    city
+                </th>
+
+                <th>
+                    location
+                </th>
+                <th>
+                    enable
+                </th>
+            </tr>
+            {%for city in cities%}
+            <tr>
+                <th>
+                    <input type="radio" id="radio_{{city['nameOfCity']}}" name="radio_{{city['nameOfCity']}}">
+                </th>
+                <th>
+                    {{ city['nameOfCity']}}
+                </th>
+                <th>
+                    {{ city['location']}}
+                </th>
+                <th>
+                    {{ city['enabled']}}
+                </th>
+            </tr>
+            {%endfor%}
+        </table>
+        <button type="submit">change</button>
+    </form>
+</body>
+
+<style>
+    table,
+    th,
+    td {
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+</style>
+{% endblock %}

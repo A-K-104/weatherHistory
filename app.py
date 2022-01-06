@@ -1,6 +1,7 @@
 from datetime import datetime
 from flask import Flask, request, render_template, session
 from flask_sqlalchemy import SQLAlchemy
+from itsdangerous import json
 from werkzeug.utils import redirect
 import bcrypt as bcrypt
 from flask_session import Session
@@ -35,12 +36,16 @@ class Cities(db.Model):
     createDateTime = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __repr__(self):
-        return '{' + \
-               f'"id": "{self.id}",' + \
-               f'"nameOfCity": "{self.nameOfCity}",' + \
-               f'"location": "{self.location}",' + \
-               f'"enabled": "{self.enabled}"' + \
-               '} '
+        return '<id %r>' % self.id
+
+
+    def json(self) -> json:
+        return {
+            "id": f'{self.id}',
+               "nameOfCity": f"{self.nameOfCity}",
+               "location": f"{self.location}",
+               "enabled": f"{self.enabled}"
+        }
 
 
 @app.before_first_request
@@ -76,12 +81,14 @@ def history():
 @app.route('/home', methods=['GET', 'POST'])
 def home():
     locations = {'Tel Aviv': [32.0809, 34.7806], 'Ness Ziona': [31.9293, 34.7987]}
-    return render_template("home.html", weatherList=weatherDataCollector.getCityInRadios(locations['Ness Ziona'])['list'],nameOfCity="")
+    return render_template("home.html",
+                           weatherList=weatherDataCollector.getCityInRadios(locations['Ness Ziona'])['list'],
+                           nameOfCity="")
 
 
 @app.route('/addLocation', methods=['GET', 'POST'])
 def add_location():
-    if Cities.query.filter_by(nameOfCity=request.form['nameOfCity']).first()is None:
+    if Cities.query.filter_by(nameOfCity=request.form['nameOfCity']).first() is None:
         new_city = Cities(nameOfCity=request.form['nameOfCity'], location=request.form['location'])
         db.session.add(new_city)
         db.session.commit()
@@ -125,9 +132,14 @@ def login():
 def admin():
     if not checkIfInSession():
         return redirect("login")
+    cities = list(Cities.query.order_by(Cities.nameOfCity))
     if request.method == "POST":
-        email = request.form['email']
-    return render_template("admin.html", status="")
+        for city in cities:
+            if f"radio_{city.nameOfCity}" in request.form:
+                city.enabled=not city.enabled
+                print(f"change :{city.json()['nameOfCity']}")
+    db.session.commit()
+    return render_template("admin.html", cities=cities)
 
 
 @app.route('/killSession', methods=['GET', 'POST'])
