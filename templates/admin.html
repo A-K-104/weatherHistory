@@ -4,7 +4,9 @@
 <body>
 
     <h1>admin page</h1>
-    <form action="\admin", method="post">
+    <button onclick="location.href='/addLocation?by=name'">add city by name</button>
+    <button onclick="location.href='/addLocation?by=radios'">add city by radius lonLat</button>
+    <form action="\admin" , method="post">
         <table>
             <tr>
                 <th>
@@ -24,7 +26,8 @@
             {%for city in cities%}
             <tr>
                 <th>
-                    <input type="radio" id="radio_{{city['nameOfCity']}}" name="radio_{{city['nameOfCity']}}">
+                    <input type="checkbox" id="radio_{{city['nameOfCity']}}" name="radio_{{city['nameOfCity']}}"
+                        >
                 </th>
                 <th>
                     {{ city['nameOfCity']}}
@@ -34,6 +37,9 @@
                 </th>
                 <th>
                     {{ city['enabled']}}
+                </th>
+                <th>
+                    <button>edit</button>
                 </th>
             </tr>
             {%endfor%}

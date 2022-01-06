@@ -6,7 +6,7 @@
     <h1>home page</h1>
 
     <form action="/history" method="post">
-        sort by city name <input placeholder="name of a city"  name="nameOfCity" value="{{nameOfCity}}" onkeydown="f(this.value)">
+        sort by city name <input placeholder="name of a city"  name="nameOfCity" value="{{nameOfCity}}" onkeydown="buildWeatherRow(this.value)">
         sort by date <input type="date" name="filterDate" required>
         <button type="submit">filter date</button>
     </form>
@@ -45,8 +45,8 @@
     </table>
 </body>
 <script>
-    f("")
-    function f(a) {
+    buildWeatherRow("")
+    function buildWeatherRow(a) {
         var tr = document.getElementById('table');
         for (var i = 1; i < tr.rows.length; i++) {
             table.deleteRow(i);

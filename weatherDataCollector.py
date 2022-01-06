@@ -19,17 +19,17 @@ def getHistoryByLatLon(latlon, time):
     return contents.json()
 
 
-def getCityInRadios(latlon):
+def getCityInRadios(latlon, radios):
     contents = requests.get(
         f'https://api.openweathermap.org/data/2.5/find?'
-        f'lat={latlon[0]}&lon={latlon[1]}&cnt=50&units=metric&appid={constance.apiKey}')
-    return contents.json()
+        f'lat={latlon[0]}&lon={latlon[1]}&cnt={radios}&units=metric&appid={constance.apiKey}')
+    return contents.json()['list']
 
 
 def getByCity(city):
     contents = requests.get(
         f'http://api.openweathermap.org/data/2.5/weather?'
-        f'q={city},uk&APPID=f7a95220f7b9e21e7e97065dfc77f7ea')
+        f'q={city}&APPID=f7a95220f7b9e21e7e97065dfc77f7ea')
     return contents.json()
 
 
