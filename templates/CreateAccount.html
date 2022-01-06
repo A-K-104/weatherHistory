@@ -1,0 +1,13 @@
+{% block content %}
+
+<body>
+
+    <h1>Create Account</h1>
+    <form action="/CreateAccount" method="POST">
+        <input type="email" placeholder="email" name="email">
+        <input type="password" placeholder="password" name="password">
+        <input type="submit" value="add user" class="btn btn-secondary">
+    </form>
+    <br /><br>
+    <a href="/login">login</a>
+    {% endblock %}
