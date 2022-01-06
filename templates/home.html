@@ -1,0 +1,99 @@
+{% extends 'navigationBar.html'%}
+{% block content %}
+
+<body>
+
+    <h1>home page</h1>
+
+    <form action="/history" method="post">
+        sort by city name <input placeholder="name of a city"  name="nameOfCity" value="{{nameOfCity}}" onkeydown="f(this.value)">
+        sort by date <input type="date" name="filterDate" required>
+        <button type="submit">filter date</button>
+    </form>
+    <table id="table">
+        <tr>
+            <th>
+                city
+            </th>
+            <th>
+                temp
+            </th>
+            <th>
+                feels_like
+            </th>
+            <th>
+                temp_min
+            </th>
+            <th>
+                temp_max
+            </th>
+            <th>
+                pressure
+            </th>
+            <th>
+                humidity
+            </th>
+            <th>
+                wind speed
+            </th>
+            <th>
+                wind deg
+            </th>
+        </tr>
+
+
+    </table>
+</body>
+<script>
+    f("")
+    function f(a) {
+        var tr = document.getElementById('table');
+        for (var i = 1; i < tr.rows.length; i++) {
+            table.deleteRow(i);
+        }
+        console.log(a)
+        "{%for weather in weatherList %}"
+        th = document.createElement('tr');
+        if (("{{weather['name']}}".toLowerCase().includes(a.toLowerCase())))
+            th.innerHTML = " <tr>\
+            <th>\
+                {{ weather['name']}}\
+            </th>\
+            <th>\
+                {{ weather['main']['temp']}}\
+            </th>\
+            <th>\
+                {{ weather['main']['feels_like']}}\
+            </th>\
+            <th>\
+                {{ weather['main']['temp_min']}}\
+            </th>\
+            <th>\
+                {{ weather['main']['temp_max']}}\
+            </th>\
+            <th>\
+                {{ weather['main']['pressure']}}\
+            </th>\
+            <th>\
+                {{ weather['main']['humidity']}}\
+            </th>\
+            <th>\
+                {{ weather['wind']['speed']}}\
+            </th>\
+            <th>\
+                {{ weather['wind']['deg']}}\
+            </th>\
+        </tr>";
+        tr.appendChild(th);
+        "{%endfor%}"
+    }
+</script>
+<style>
+    table,
+    th,
+    td {
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+</style>
+{% endblock %}

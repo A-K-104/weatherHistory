@@ -67,12 +67,26 @@ def baseRoute():
     return redirect("/home")
 
 
+@app.route('/history', methods=['GET', 'POST'])
+def history():
+    if request.method == "POST":
+        return f"{request.form['nameOfCity']},{request.form['filterDate']}"
+
+
 @app.route('/home', methods=['GET', 'POST'])
 def home():
     locations = {'Tel Aviv': [32.0809, 34.7806], 'Ness Ziona': [31.9293, 34.7987]}
-    for location in weatherDataCollector.getCityInRadios(locations['Ness Ziona'])['list']:
-        print(location['name'])
-    return "home"
+    return render_template("home.html", weatherList=weatherDataCollector.getCityInRadios(locations['Ness Ziona'])['list'],nameOfCity="")
+
+
+@app.route('/addLocation', methods=['GET', 'POST'])
+def add_location():
+    if Cities.query.filter_by(nameOfCity=request.form['nameOfCity']).first()is None:
+        new_city = Cities(nameOfCity=request.form['nameOfCity'], location=request.form['location'])
+        db.session.add(new_city)
+        db.session.commit()
+        return redirect("admin")
+    return "a"
 
 
 @app.route('/CreateAccount', methods=['GET', 'POST'])
@@ -101,10 +115,19 @@ def login():
         if not (user is None):
             if check_hashed_password(password, user.password):
                 session["email"] = user.email
-                return redirect("home")
+                return redirect("admin")
             return render_template("login.html", status="password issue", email=email, password=password)
         return render_template("login.html", status="user wasn't found", email=email, password=password)
     return render_template("login.html", status="")
+
+
+@app.route('/admin', methods=['GET', 'POST'])
+def admin():
+    if not checkIfInSession():
+        return redirect("login")
+    if request.method == "POST":
+        email = request.form['email']
+    return render_template("admin.html", status="")
 
 
 @app.route('/killSession', methods=['GET', 'POST'])
