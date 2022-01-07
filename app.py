@@ -38,14 +38,6 @@ class Cities(db.Model):
     def __repr__(self):
         return '<enabled %r>' % self.enabled
 
-    def json(self) -> json:
-        return {
-            "id": f'{self.id}',
-            "nameOfCity": f"{self.nameOfCity}",
-            "location": f"{self.location}",
-            "enabled": f"{self.enabled}"
-        }
-
 
 @app.before_first_request
 def create_tables():
@@ -80,11 +72,9 @@ def history():
 @app.route('/home', methods=['GET', 'POST'])
 def home():
     cities = list(Cities.query.filter_by(enabled=True).all())
-    # print(len(cities))
     list_of_locations = []
     for city in cities:
         list_of_locations.append([city.nameOfCity, weatherDataCollector.fetByLatLon(city.location)])
-    print(list_of_locations[0])
     return render_template("home.html",
                            weatherList=list_of_locations,
                            nameOfCity="")
@@ -95,11 +85,9 @@ def home():
 def add_location():
     if request.method == 'POST':
         if 'by' in request.args:
-            print(len(request.form))
             for city in request.form:
                 city_name = city[5:]
                 if city.__contains__('name_'):
-                    print(request.form[city])
                     if Cities.query.filter_by(nameOfCity=city_name).first() is None:
                         new_city = Cities(nameOfCity=city_name, location=[float(request.form[f'coord_lat_{city_name}']),
                                                                           float(request.form[f'coord_lon_{city_name}'])]
@@ -109,13 +97,12 @@ def add_location():
             return redirect("admin")
         else:
             if request.form['nameOfCity'] != "":
-                a = [weatherDataCollector.getByCity(request.form['nameOfCity'])]
-                print(a)
+                found_cities_options = [weatherDataCollector.getByCity(request.form['nameOfCity'])]
             else:
-                a = weatherDataCollector.getCityInRadios([request.form['lat'],
-                                                          request.form['lon']],
-                                                         request.form['radios'])
-            return render_template('addLocation.html', cities=a)
+                found_cities_options = weatherDataCollector.getCityInRadios([request.form['lat'],
+                                                                             request.form['lon']],
+                                                                            request.form['radios'])
+            return render_template('addLocation.html', cities=found_cities_options)
 
     return render_template('addLocation.html', cities=[])
 
@@ -160,9 +147,12 @@ def admin():
     if request.method == "POST":
         for city in cities:
             if f"radio_{city.nameOfCity}" in request.form:
-                city.enabled = not city.enabled
-                print(f"change :{city.json()['nameOfCity']}")
-    db.session.commit()
+                if 'delete' in request.form:
+                    db.session.delete(city)
+                else:
+                    city.enabled = not city.enabled
+        db.session.commit()
+        return redirect('/admin')
     return render_template("admin.html", cities=cities)
 
 

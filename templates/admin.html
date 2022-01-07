@@ -4,8 +4,6 @@
 <body>
 
     <h1>admin page</h1>
-    <button onclick="location.href='/addLocation?by=name'">add city by name</button>
-    <button onclick="location.href='/addLocation?by=radios'">add city by radius lonLat</button>
     <form action="\admin" , method="post">
         <table>
             <tr>
@@ -38,13 +36,11 @@
                 <th>
                     {{ city['enabled']}}
                 </th>
-                <th>
-                    <button>edit</button>
-                </th>
             </tr>
             {%endfor%}
         </table>
-        <button type="submit">change</button>
+        <button type="submit" name="change">change</button>
+        <button type="submit" name="delete">delete</button>
     </form>
 </body>
 
