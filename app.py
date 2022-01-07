@@ -87,7 +87,7 @@ def home():
 def add_location():
     if not checkIfInSession():
         return redirect("login")
-    found_cities_options=[]
+    found_cities_options = []
     if request.method == 'POST':
         if 'by' in request.args:
             for city in request.form:
@@ -135,7 +135,7 @@ def login():
         email = request.form['email']
         password = request.form['password']
         user = User.query.get(email)
-        if not (user is None):
+        if user is not None:
             if check_hashed_password(password, user.password):
                 session["email"] = user.email
                 return redirect("admin")

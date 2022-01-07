@@ -7,8 +7,7 @@
     <form action="/home" method="post">
         sort by city name <input placeholder="name of a city" name="nameOfCity" value="{{nameOfCity}}"
             onkeyup="buildWeatherRow(this.value)">
-        sort by date <input type="date" name="filterDate" id="filterDate" value="{{selectedDate}}" min="1997-01-01"
-            max="2022-10-10" required>
+        sort by date <input type="date" name="filterDate" id="filterDate" value="{{selectedDate}}" required>
         <button type="submit">filter date</button>
     </form>
     <table id="table">
