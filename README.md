@@ -7,3 +7,6 @@ To run the project download the files to your local (win) pc. Then you need to r
    3. add to constance.py to apiKey your api key for (https://openweathermap.org)
    4. run: python app.py.
    5. you will see local host link to the webpage. Press CTRL+C to quit
+
+To see all data to to /home in the url.
+To acsses admin options go to /admin page, login is required if you don't have a user just go to /CreateAccount page.
