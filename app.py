@@ -1,34 +1,25 @@
 from datetime import datetime
 from flask import request, render_template, session
 from werkzeug.utils import redirect
-import bcrypt as bcrypt
 import constance
 import weatherDataCollector
 from classes.cities import Cities
-from classes.user import User
+from classes.user import User, get_hashed_password, check_hashed_password
 
 app = constance.app
 db = constance.db
 sess = constance.sess
 
 
-@app.before_first_request
-def create_tables():
-    db.create_all()
-
-
-def get_hashed_password(plain_text_password):
-    return bcrypt.hashpw(plain_text_password.encode('utf-8'), bcrypt.gensalt())
-
-
-def check_hashed_password(plain_text_password, hashed_password):
-    return bcrypt.checkpw(plain_text_password.encode('utf-8'), hashed_password)
-
-
 def checkIfInSession():
     if not ('email' in session):
         return False
     return True
+
+
+@app.before_first_request
+def create_tables():
+    db.create_all()
 
 
 @app.route('/', methods=['GET', 'POST'])
