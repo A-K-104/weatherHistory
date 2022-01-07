@@ -31,7 +31,9 @@
             <tr>
                 <th>
                     <input type="checkbox" id="radio_{{city['name']}}" name="name_{{city['name']}}">
-                    <input type="hidden" name="coord_{{city['name']}}" value="{{[city['coord']['lat'],city['coord']['lon']]}}">
+                    <input type="hidden" name="coord_lat_{{city['name']}}" value="{{city['coord']['lat']}}">
+                    <input type="hidden" name="coord_lon_{{city['name']}}" value="{{city['coord']['lon']}}">
+
                 </th>
                 <th>
                     {{ city['name']}}

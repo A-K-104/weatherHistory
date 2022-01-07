@@ -22,10 +22,10 @@
                 feels_like
             </th>
             <th>
-                temp_min
+                uvi
             </th>
             <th>
-                temp_max
+                clouds
             </th>
             <th>
                 pressure
@@ -54,34 +54,34 @@
         console.log(a)
         "{%for weather in weatherList %}"
         th = document.createElement('tr');
-        if (("{{weather['name']}}".toLowerCase().includes(a.toLowerCase())))
+        if (("{{weather[0]}}".toLowerCase().includes(a.toLowerCase())))
             th.innerHTML = " <tr>\
             <th>\
-                {{ weather['name']}}\
+                {{ weather[0]}}\
             </th>\
             <th>\
-                {{ weather['main']['temp']}}\
+                {{ weather[1]['current']['temp']}}\
             </th>\
             <th>\
-                {{ weather['main']['feels_like']}}\
+                {{ weather[1]['current']['feels_like']}}\
             </th>\
             <th>\
-                {{ weather['main']['temp_min']}}\
+                {{ weather[1]['current']['uvi']}}\
             </th>\
             <th>\
-                {{ weather['main']['temp_max']}}\
+                {{ weather[1]['current']['clouds']}}\
             </th>\
             <th>\
-                {{ weather['main']['pressure']}}\
+                {{ weather[1]['current']['pressure']}}\
             </th>\
             <th>\
-                {{ weather['main']['humidity']}}\
+                {{ weather[1]['current']['humidity']}}\
             </th>\
             <th>\
-                {{ weather['wind']['speed']}}\
+                {{ weather[1]['current']['wind_speed']}}\
             </th>\
             <th>\
-                {{ weather['wind']['deg']}}\
+                {{ weather[1]['current']['wind_deg']}}\
             </th>\
         </tr>";
         tr.appendChild(th);

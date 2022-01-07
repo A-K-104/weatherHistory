@@ -36,7 +36,7 @@ class Cities(db.Model):
     createDateTime = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __repr__(self):
-        return '<id %r>' % self.id
+        return '<enabled %r>' % self.enabled
 
     def json(self) -> json:
         return {
@@ -79,12 +79,18 @@ def history():
 
 @app.route('/home', methods=['GET', 'POST'])
 def home():
-    locations = {'Tel Aviv': [32.0809, 34.7806], 'Ness Ziona': [31.9293, 34.7987]}
+    cities = list(Cities.query.filter_by(enabled=True).all())
+    # print(len(cities))
+    list_of_locations = []
+    for city in cities:
+        list_of_locations.append([city.nameOfCity, weatherDataCollector.fetByLatLon(city.location)])
+    print(list_of_locations[0])
     return render_template("home.html",
-                           weatherList=weatherDataCollector.getCityInRadios(locations['Ness Ziona'],50),
+                           weatherList=list_of_locations,
                            nameOfCity="")
 
 
+# todo: filter double locations and already enabled locations.
 @app.route('/addLocation', methods=['GET', 'POST'])
 def add_location():
     if request.method == 'POST':
@@ -95,7 +101,9 @@ def add_location():
                 if city.__contains__('name_'):
                     print(request.form[city])
                     if Cities.query.filter_by(nameOfCity=city_name).first() is None:
-                        new_city = Cities(nameOfCity=city_name, location=request.form[f'coord_{city_name}'])
+                        new_city = Cities(nameOfCity=city_name, location=[float(request.form[f'coord_lat_{city_name}']),
+                                                                          float(request.form[f'coord_lon_{city_name}'])]
+                                          )
                         db.session.add(new_city)
                 db.session.commit()
             return redirect("admin")
