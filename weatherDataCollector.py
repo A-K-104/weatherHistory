@@ -20,10 +20,14 @@ def getHistoryByLatLon(latlon, time):
 
 
 def getCityInRadios(latlon, radios):
-    contents = requests.get(
-        f'https://api.openweathermap.org/data/2.5/find?'
-        f'lat={latlon[0]}&lon={latlon[1]}&cnt={radios}&units=metric&appid={constance.apiKey}')
-    return contents.json()['list']
+    try:
+        contents = requests.get(
+            f'https://api.openweathermap.org/data/2.5/find?'
+            f'lat={latlon[0]}&lon={latlon[1]}&cnt={radios}&units=metric&appid={constance.apiKey}')
+        return contents.json()['list']
+    except Exception as e:
+        print(f"error: {e}")
+        return []
 
 
 def getByCity(city):
