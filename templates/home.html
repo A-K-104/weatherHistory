@@ -6,7 +6,8 @@
     <h1>home page</h1>
 
     <form action="/history" method="post">
-        sort by city name <input placeholder="name of a city"  name="nameOfCity" value="{{nameOfCity}}" onkeydown="buildWeatherRow(this.value)">
+        sort by city name <input placeholder="name of a city" name="nameOfCity" value="{{nameOfCity}}"
+        onkeyup="buildWeatherRow(this.value)">
         sort by date <input type="date" name="filterDate" required>
         <button type="submit">filter date</button>
     </form>
@@ -48,13 +49,14 @@
     buildWeatherRow("")
     function buildWeatherRow(a) {
         var tr = document.getElementById('table');
-        for (var i = 1; i < tr.rows.length; i++) {
-            table.deleteRow(i);
+        var temp = tr.rows.length
+        for (var i = 1; i < temp; i++) {
+            tr.deleteRow(1);
         }
-        console.log(a)
+        
         "{%for weather in weatherList %}"
-        th = document.createElement('tr');
-        if (("{{weather[0]}}".toLowerCase().includes(a.toLowerCase())))
+        if (("{{weather[0]}}".toLowerCase()).startsWith((a.toLowerCase()))) {
+            th = document.createElement('tr');
             th.innerHTML = " <tr>\
             <th>\
                 {{ weather[0]}}\
@@ -84,7 +86,8 @@
                 {{ weather[1]['current']['wind_deg']}}\
             </th>\
         </tr>";
-        tr.appendChild(th);
+            tr.appendChild(th);
+        }
         "{%endfor%}"
     }
 </script>
