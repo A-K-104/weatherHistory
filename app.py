@@ -1,41 +1,15 @@
 from datetime import datetime
-from flask import Flask, request, render_template, session
-from flask_sqlalchemy import SQLAlchemy
+from flask import request, render_template, session
 from werkzeug.utils import redirect
 import bcrypt as bcrypt
-from flask_session import Session
-
+import constance
 import weatherDataCollector
+from classes.cities import Cities
+from classes.user import User
 
-app = Flask(__name__)
-app.config['SECRET_KEY'] = 'randKey'
-app.config["SESSION_PERMANENT"] = False
-app.config['SESSION_TYPE'] = 'filesystem'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///user.db'
-app.config['SQLALCHEMY_BINDS'] = {'data': 'sqlite:///user.db'}
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-sess = Session(app)
-db = SQLAlchemy(app)
-
-
-class User(db.Model):
-    email = db.Column(db.String(200), primary_key=True)
-    password = db.Column(db.String(200), nullable=False)
-    date_created = db.Column(db.DateTime, default=datetime.utcnow)
-
-    def __repr__(self):
-        return '{' + f'"name": "{self.name}"' + '}'
-
-
-class Cities(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    nameOfCity = db.Column(db.String(200))
-    location = db.Column(db.JSON(200))
-    enabled = db.Column(db.Boolean, default=True)
-    createDateTime = db.Column(db.DateTime, default=datetime.utcnow)
-
-    def __repr__(self):
-        return '<enabled %r>' % self.enabled
+app = constance.app
+db = constance.db
+sess = constance.sess
 
 
 @app.before_first_request
