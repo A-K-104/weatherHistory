@@ -83,7 +83,6 @@ def home():
                            selectedDate="")
 
 
-# todo: filter double locations and already enabled locations.
 @app.route('/addLocation', methods=['GET', 'POST'])
 def add_location():
     if not checkIfInSession():
