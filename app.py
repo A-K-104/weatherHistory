@@ -1,7 +1,6 @@
 from datetime import datetime
 from flask import Flask, request, render_template, session
 from flask_sqlalchemy import SQLAlchemy
-from itsdangerous import json
 from werkzeug.utils import redirect
 import bcrypt as bcrypt
 from flask_session import Session
@@ -87,6 +86,8 @@ def home():
 # todo: filter double locations and already enabled locations.
 @app.route('/addLocation', methods=['GET', 'POST'])
 def add_location():
+    if not checkIfInSession():
+        return redirect("login")
     if request.method == 'POST':
         if 'by' in request.args:
             for city in request.form:
@@ -116,16 +117,17 @@ def CreateAccount():
     if request.method == "POST":
         email = request.form['email']
         password = get_hashed_password(request.form['password'])
-        new_user = User(email=email, password=password)
-        try:
-            db.session.add(new_user)
-            db.session.commit()
-            return redirect('/login')
-        except Exception as e:
-            #  todo: add protection in case user already exist
-            return f"There was an error adding the new user... {e}"
+        if User.query.filter_by(email=email).first() is None:
+            new_user = User(email=email, password=password)
+            try:
+                db.session.add(new_user)
+                db.session.commit()
+                return redirect('/login')
+            except Exception as e:
+                return f"There was an error adding the new user... {e}"
+        return render_template("CreateAccount.html", message="email already exist")
     else:
-        return render_template("CreateAccount.html")
+        return render_template("CreateAccount.html", message="")
 
 
 @app.route('/login', methods=['GET', 'POST'])

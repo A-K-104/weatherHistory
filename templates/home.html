@@ -7,8 +7,8 @@
     <form action="/home" method="post">
         sort by city name <input placeholder="name of a city" name="nameOfCity" value="{{nameOfCity}}"
             onkeyup="buildWeatherRow(this.value)">
-        sort by date <input type="date" name="filterDate" id="filterDate" value="{{selectedDate}}"
-            min="1997-01-01" max="2022-10-10" required>
+        sort by date <input type="date" name="filterDate" id="filterDate" value="{{selectedDate}}" min="1997-01-01"
+            max="2022-10-10" required>
         <button type="submit">filter date</button>
     </form>
     <table id="table">
@@ -46,10 +46,10 @@
     </table>
 </body>
 <script>
-    var today=new Date()
-    var requiredDate=new Date(today.getFullYear(),today.getMonth(),today.getDate()-3)
-    document.getElementById("filterDate").max = today.toJSON().slice(0,10);
-    document.getElementById("filterDate").min = requiredDate.toJSON().slice(0,10);
+    var today = new Date()
+    var requiredDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 3)
+    document.getElementById("filterDate").max = today.toJSON().slice(0, 10);
+    document.getElementById("filterDate").min = requiredDate.toJSON().slice(0, 10);
     buildWeatherRow("")
     function buildWeatherRow(a) {
         var tr = document.getElementById('table');
