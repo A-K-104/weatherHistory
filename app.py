@@ -88,6 +88,7 @@ def home():
 def add_location():
     if not checkIfInSession():
         return redirect("login")
+    found_cities_options=[]
     if request.method == 'POST':
         if 'by' in request.args:
             for city in request.form:
@@ -107,9 +108,8 @@ def add_location():
                 found_cities_options = weatherDataCollector.getCityInRadios([request.form['lat'],
                                                                              request.form['lon']],
                                                                             request.form['radios'])
-            return render_template('addLocation.html', cities=found_cities_options)
-
-    return render_template('addLocation.html', cities=[])
+                found_cities_options = {each['name']: each for each in found_cities_options}.values()
+    return render_template('addLocation.html', cities=found_cities_options)
 
 
 @app.route('/CreateAccount', methods=['GET', 'POST'])
