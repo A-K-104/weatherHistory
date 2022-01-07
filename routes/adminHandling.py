@@ -13,6 +13,8 @@ admin_handling = Blueprint('admin_handling', __name__)
 
 @admin_handling.route('/addLocation', methods=['GET', 'POST'])
 def add_location():
+    latLonR = ["", "", ""]
+    nameOfCity = ''
     if not checkIfInSession():
         return redirect("login")
     found_cities_options = []
@@ -36,7 +38,10 @@ def add_location():
                                                                              request.form['lon']],
                                                                             request.form['radios'])
                 found_cities_options = {each['name']: each for each in found_cities_options}.values()
-    return render_template('addLocation.html', cities=found_cities_options)
+            latLonR = [request.form['lat'], request.form['lon'], request.form['radios']]
+            nameOfCity = request.form['nameOfCity']
+            print(found_cities_options)
+    return render_template('addLocation.html', cities=found_cities_options, latLonR=latLonR, nameOfCity=nameOfCity)
 
 
 @admin_handling.route('/admin', methods=['GET', 'POST'])

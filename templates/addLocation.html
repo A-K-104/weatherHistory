@@ -5,10 +5,10 @@
 
     <h1>add location</h1>
     <form action="/addLocation" method="POST">
-        <input placeholder="nameOfCity" name="nameOfCity">/or find group by:
-        lat:<input type="number" step="0.0001" placeholder="lat" name="lat">
-        lon:<input type="number" step="0.0001" placeholder="lon" name="lon">
-        radios:<input type="number" max="50" min="5" placeholder="radio" name="radios">
+        <input placeholder="nameOfCity" name="nameOfCity" value="{{nameOfCity}}">/or find group by:
+        lat:<input type="number" step="0.0001" placeholder="lat" name="lat" value='{{latLonR[0]}}'>
+        lon:<input type="number" step="0.0001" placeholder="lon" name="lon" value='{{latLonR[1]}}'>
+        radios:<input type="number" max="50" min="5" placeholder="radio" name="radios" value='{{latLonR[2]}}'>
         <button type="submit">search</button>
     </form>
     <form action="/addLocation?by=add" method="POST">
@@ -27,8 +27,9 @@
                 </th>
 
             </tr>
-
             {%for city in cities%}
+            {%if city['cod']!='404' %}
+
             <tr>
                 <th>
                     <input type="checkbox" id="radio_{{city['name']}}" name="name_{{city['name']}}">
@@ -43,6 +44,7 @@
                     {{ city['coord']}}
                 </th>
             </tr>
+            {%endif%}
             {%endfor%}
         </table>
     </form>
