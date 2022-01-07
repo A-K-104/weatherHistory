@@ -4,10 +4,11 @@
 
     <h1>home page</h1>
 
-    <form action="/history" method="post">
+    <form action="/home" method="post">
         sort by city name <input placeholder="name of a city" name="nameOfCity" value="{{nameOfCity}}"
-        onkeyup="buildWeatherRow(this.value)">
-        sort by date <input type="date" name="filterDate" required>
+            onkeyup="buildWeatherRow(this.value)">
+        sort by date <input type="date" name="filterDate" id="filterDate" value="{{selectedDate}}"
+            min="1997-01-01" max="2022-10-10" required>
         <button type="submit">filter date</button>
     </form>
     <table id="table">
@@ -45,6 +46,10 @@
     </table>
 </body>
 <script>
+    var today=new Date()
+    var requiredDate=new Date(today.getFullYear(),today.getMonth(),today.getDate()-3)
+    document.getElementById("filterDate").max = today.toJSON().slice(0,10);
+    document.getElementById("filterDate").min = requiredDate.toJSON().slice(0,10);
     buildWeatherRow("")
     function buildWeatherRow(a) {
         var tr = document.getElementById('table');
@@ -52,7 +57,7 @@
         for (var i = 1; i < temp; i++) {
             tr.deleteRow(1);
         }
-        
+
         "{%for weather in weatherList %}"
         if (("{{weather[0]}}".toLowerCase()).startsWith((a.toLowerCase()))) {
             th = document.createElement('tr');
